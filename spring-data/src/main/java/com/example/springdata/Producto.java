@@ -9,17 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        name="productos",
-        schema="prueba"
-)
 public class Producto {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String nombre;
+    @Column(length = 512)
+    private String nombreProducto;
 
-    private double precio;
+    @Column(columnDefinition = "TEXT")
+    private String descripcion;
+
+    @Column(name = "precio")
+    private double precioVenta;
 }
