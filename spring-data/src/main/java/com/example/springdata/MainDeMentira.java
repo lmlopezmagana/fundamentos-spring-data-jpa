@@ -1,5 +1,7 @@
 package com.example.springdata;
 
+import com.example.springdata.model.Producto;
+import com.example.springdata.repos.ProductoRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,11 @@ public class MainDeMentira {
                 .build();
 
         repo.save(p);
+
+        repo.findById(1L).ifPresentOrElse(
+                System.out::println,
+                () -> System.out.println("No existe un producto con ID 1")
+        );
 
 
     }
