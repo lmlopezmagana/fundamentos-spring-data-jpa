@@ -21,10 +21,29 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "category_generator")
     @SequenceGenerator(name="category_generator",
-            sequenceName = "category_seq", allocationSize = 1)
+            sequenceName = "categoria_seq", allocationSize = 1)
     private Long id;
 
     private String nombre;
+
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
+    @Builder.Default
+    @ToString.Exclude
+    private List<Producto> productos = new ArrayList<>();
+
+    // Métodos helper
+
+    public Categoria addProducto(Producto p) {
+        productos.add(p);
+        p.setCategoria(this);
+        return this;
+    }
+
+    public Categoria removeProducto(Producto p) {
+        productos.remove(p);
+        p.setCategoria(null);
+        return this;
+    }
 
 
 
