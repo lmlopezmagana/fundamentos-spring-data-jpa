@@ -1,9 +1,11 @@
-package com.example.springdata;
+package com.example.springdata.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -13,21 +15,18 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Producto {
+public class Categoria {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_generator")
-    @SequenceGenerator(name="product_generator", sequenceName = "producto_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "category_generator")
+    @SequenceGenerator(name="category_generator",
+            sequenceName = "category_seq", allocationSize = 1)
     private Long id;
 
-    @Column(length = 512)
-    private String nombreProducto;
+    private String nombre;
 
-    @Column(columnDefinition = "TEXT")
-    private String descripcion;
 
-    @Column(name = "precio")
-    private double precioVenta;
 
     @Override
     public final boolean equals(Object o) {
@@ -36,12 +35,13 @@ public class Producto {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Producto producto = (Producto) o;
-        return getId() != null && Objects.equals(getId(), producto.getId());
+        Categoria categoria = (Categoria) o;
+        return getId() != null && Objects.equals(getId(), categoria.getId());
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }
