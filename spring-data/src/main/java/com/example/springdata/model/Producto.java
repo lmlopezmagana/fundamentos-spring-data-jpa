@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
-//@ToString
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -42,6 +44,15 @@ public class Producto {
         @ForeignKey(name = "fk_producto_categoria"))
     private Categoria categoria;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "producto_tag",
+        joinColumns = @JoinColumn(name="producto_id"),
+            inverseJoinColumns = @JoinColumn(name="tag_id")
+    )
+    @Builder.Default
+    private Set<Tag> tags = new HashSet<>();
+
+
     // Helpers One to One
 
     public void setProductoDescripcion(ProductoDescripcion descripcion) {
@@ -53,6 +64,18 @@ public class Producto {
         this.setDescripcion(null);
         descripcion.setProducto(null);
     }
+
+    // Helpers Tag
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getProductos().add(this);
+    }
+
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getProductos().remove(this);
+    }
+
 
 
 
@@ -71,16 +94,6 @@ public class Producto {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "nombreProducto = " + nombreProducto + ", " +
-                "descripcion = " + descripcion + ", " +
-                "precioVenta = " + precioVenta + ", " +
-                "categoria = " + categoria + ")";
     }
 
 

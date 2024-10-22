@@ -3,13 +3,16 @@ package com.example.springdata;
 import com.example.springdata.model.Categoria;
 import com.example.springdata.model.Producto;
 import com.example.springdata.model.ProductoDescripcion;
+import com.example.springdata.model.Tag;
 import com.example.springdata.repos.CategoriaRepository;
 import com.example.springdata.repos.ProductoDescripcionRepository;
 import com.example.springdata.repos.ProductoRepository;
+import com.example.springdata.repos.TagRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,6 +22,7 @@ public class MainDeMentira {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final ProductoDescripcionRepository productoDescripcionRepository;
+    private final TagRepository tagRepository;
 
 
     @PostConstruct
@@ -44,6 +48,16 @@ public class MainDeMentira {
         p.setProductoDescripcion(descripcion);
 
         productoDescripcionRepository.save(descripcion);
+
+        Tag tag1 = Tag.builder().nombre("Tag 1").build();
+        Tag tag2 = Tag.builder().nombre("Tag 2").build();
+
+        tagRepository.saveAll(List.of(tag1, tag2));
+
+        p.addTag(tag1);
+        p.addTag(tag2);
+
+        productoRepository.save(p);
 
 
         productoRepository.findById(1L).ifPresentOrElse(
@@ -79,6 +93,9 @@ public class MainDeMentira {
                 },
                 () -> System.out.println("No existe una categoria con ID 1")
         );
+
+        productoRepository.findAll()
+                .forEach(System.out::println);
 
 
     }
