@@ -26,7 +26,7 @@ public class Categoria {
 
     private String nombre;
 
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "categoria"/*, fetch = FetchType.EAGER*/)
     @Builder.Default
     @ToString.Exclude
     private List<Producto> productos = new ArrayList<>();
