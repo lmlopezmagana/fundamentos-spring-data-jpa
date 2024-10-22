@@ -26,7 +26,7 @@ public class MainDeMentira {
     private final CategoriaService categoriaService;
 
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         Producto p = Producto.builder()

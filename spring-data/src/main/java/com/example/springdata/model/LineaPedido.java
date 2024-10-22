@@ -1,13 +1,10 @@
 package com.example.springdata.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -16,22 +13,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Tag {
+public class LineaPedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "tag_generator")
-    @SequenceGenerator(name="tag_generator",
-            sequenceName = "tag_seq", allocationSize = 1)
+    @GeneratedValue
     private Long id;
 
-    private String nombre;
+    @ManyToOne
+    private Producto producto;
 
-    @ManyToMany(mappedBy = "tags")
-    @Builder.Default
-    @ToString.Exclude
-    private Set<Producto> productos = new HashSet<>();
+    private int cantidad;
 
+    private double precioVenta;
+
+    @ManyToOne
+    private Pedido pedido;
 
     @Override
     public final boolean equals(Object o) {
@@ -40,8 +36,8 @@ public class Tag {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Tag tag = (Tag) o;
-        return getId() != null && Objects.equals(getId(), tag.getId());
+        LineaPedido that = (LineaPedido) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override

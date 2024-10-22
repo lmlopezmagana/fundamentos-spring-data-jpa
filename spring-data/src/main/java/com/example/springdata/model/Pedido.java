@@ -1,13 +1,14 @@
 package com.example.springdata.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.cglib.core.Local;
 
-import java.util.HashSet;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -16,21 +17,38 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Tag {
+public class Pedido {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "tag_generator")
-    @SequenceGenerator(name="tag_generator",
-            sequenceName = "tag_seq", allocationSize = 1)
+    @GeneratedValue
     private Long id;
 
-    private String nombre;
+    @Builder.Default
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @ManyToMany(mappedBy = "tags")
+    private String cliente;
+
+    @OneToMany(
+            mappedBy = "pedido",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
-    private Set<Producto> productos = new HashSet<>();
+    @Setter(AccessLevel.NONE)
+    List<LineaPedido> lineasPedido = new ArrayList<>();
+
+    // Helpers
+
+    public void addLineaPedido(LineaPedido lineaPedido) {
+        lineasPedido.add(lineaPedido);
+        lineaPedido.setPedido(this);
+    }
+
+    public void removeLineaPedido(LineaPedido lineaPedido) {
+        lineasPedido.remove(lineaPedido);
+        //lineaPedido.setPedido(null); // No es necesaria gracias a orphanRemoval
+    }
 
 
     @Override
@@ -40,8 +58,8 @@ public class Tag {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Tag tag = (Tag) o;
-        return getId() != null && Objects.equals(getId(), tag.getId());
+        Pedido pedido = (Pedido) o;
+        return getId() != null && Objects.equals(getId(), pedido.getId());
     }
 
     @Override
