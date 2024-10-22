@@ -1,9 +1,8 @@
-package com.example.springdata.model;
+package com.example.springdata.asociaciones.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

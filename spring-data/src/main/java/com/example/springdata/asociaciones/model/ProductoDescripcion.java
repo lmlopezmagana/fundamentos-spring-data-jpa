@@ -1,4 +1,4 @@
-package com.example.springdata.model;
+package com.example.springdata.asociaciones.model;
 
 import jakarta.persistence.*;
 import lombok.*;

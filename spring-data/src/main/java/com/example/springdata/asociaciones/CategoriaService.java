@@ -1,14 +1,12 @@
-package com.example.springdata;
+package com.example.springdata.asociaciones;
 
-import com.example.springdata.model.Categoria;
-import com.example.springdata.model.Producto;
-import com.example.springdata.repos.CategoriaRepository;
+import com.example.springdata.asociaciones.model.Categoria;
+import com.example.springdata.asociaciones.repos.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

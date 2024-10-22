@@ -1,12 +1,13 @@
-package com.example.springdata.model;
+package com.example.springdata.asociaciones.model;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,36 +16,21 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Categoria {
+public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "category_generator")
-    @SequenceGenerator(name="category_generator",
-            sequenceName = "categoria_seq", allocationSize = 1)
+            generator = "tag_generator")
+    @SequenceGenerator(name="tag_generator",
+            sequenceName = "tag_seq", allocationSize = 1)
     private Long id;
 
     private String nombre;
 
-    @OneToMany(mappedBy = "categoria"/*, fetch = FetchType.EAGER*/)
+    @ManyToMany(mappedBy = "tags")
     @Builder.Default
     @ToString.Exclude
-    private List<Producto> productos = new ArrayList<>();
-
-    // Métodos helper
-
-    public Categoria addProducto(Producto p) {
-        productos.add(p);
-        p.setCategoria(this);
-        return this;
-    }
-
-    public Categoria removeProducto(Producto p) {
-        productos.remove(p);
-        p.setCategoria(null);
-        return this;
-    }
-
+    private Set<Producto> productos = new HashSet<>();
 
 
     @Override
@@ -54,13 +40,12 @@ public class Categoria {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Categoria categoria = (Categoria) o;
-        return getId() != null && Objects.equals(getId(), categoria.getId());
+        Tag tag = (Tag) o;
+        return getId() != null && Objects.equals(getId(), tag.getId());
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
-
 }

@@ -1,7 +1,7 @@
-package com.example.springdata.repos;
+package com.example.springdata.asociaciones.repos;
 
 
-import com.example.springdata.model.Categoria;
+import com.example.springdata.asociaciones.model.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

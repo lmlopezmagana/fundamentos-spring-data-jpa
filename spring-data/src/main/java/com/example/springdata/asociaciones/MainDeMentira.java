@@ -1,14 +1,13 @@
-package com.example.springdata;
+package com.example.springdata.asociaciones;
 
-import com.example.springdata.model.Categoria;
-import com.example.springdata.model.Producto;
-import com.example.springdata.model.ProductoDescripcion;
-import com.example.springdata.model.Tag;
-import com.example.springdata.repos.CategoriaRepository;
-import com.example.springdata.repos.ProductoDescripcionRepository;
-import com.example.springdata.repos.ProductoRepository;
-import com.example.springdata.repos.TagRepository;
-import jakarta.annotation.PostConstruct;
+import com.example.springdata.asociaciones.model.Categoria;
+import com.example.springdata.asociaciones.model.Producto;
+import com.example.springdata.asociaciones.model.ProductoDescripcion;
+import com.example.springdata.asociaciones.model.Tag;
+import com.example.springdata.asociaciones.repos.CategoriaRepository;
+import com.example.springdata.asociaciones.repos.ProductoDescripcionRepository;
+import com.example.springdata.asociaciones.repos.ProductoRepository;
+import com.example.springdata.asociaciones.repos.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

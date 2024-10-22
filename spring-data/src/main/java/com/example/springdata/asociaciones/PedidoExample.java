@@ -1,10 +1,10 @@
-package com.example.springdata;
+package com.example.springdata.asociaciones;
 
-import com.example.springdata.model.LineaPedido;
-import com.example.springdata.model.Pedido;
-import com.example.springdata.model.Producto;
-import com.example.springdata.repos.PedidoRepository;
-import com.example.springdata.repos.ProductoRepository;
+import com.example.springdata.asociaciones.model.LineaPedido;
+import com.example.springdata.asociaciones.model.Pedido;
+import com.example.springdata.asociaciones.model.Producto;
+import com.example.springdata.asociaciones.repos.PedidoRepository;
+import com.example.springdata.asociaciones.repos.ProductoRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class PedidoExample {
     private final PedidoRepository pedidoRepository;
     private final ProductoRepository productoRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         // Seleccionamos varios productos al azar para incluirlos en el pedido.
