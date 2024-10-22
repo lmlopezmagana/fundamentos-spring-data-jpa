@@ -25,8 +25,14 @@ public class Producto {
     @Column(length = 512)
     private String nombreProducto;
 
-    @Column(columnDefinition = "TEXT")
-    private String descripcion;
+    //@Column(columnDefinition = "TEXT")
+    //private String descripcion;
+
+    @OneToOne(
+            mappedBy = "producto",
+            fetch = FetchType.EAGER
+    )
+    private ProductoDescripcion descripcion;
 
     @Column(name = "precio")
     private double precioVenta;
@@ -35,6 +41,19 @@ public class Producto {
     @JoinColumn(foreignKey =
         @ForeignKey(name = "fk_producto_categoria"))
     private Categoria categoria;
+
+    // Helpers One to One
+
+    public void setProductoDescripcion(ProductoDescripcion descripcion) {
+        this.setDescripcion(descripcion);
+        descripcion.setProducto(this);
+    }
+
+    public void removeProductoDescripcion(ProductoDescripcion descripcion) {
+        this.setDescripcion(null);
+        descripcion.setProducto(null);
+    }
+
 
 
 

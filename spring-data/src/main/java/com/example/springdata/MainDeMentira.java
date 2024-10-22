@@ -2,7 +2,9 @@ package com.example.springdata;
 
 import com.example.springdata.model.Categoria;
 import com.example.springdata.model.Producto;
+import com.example.springdata.model.ProductoDescripcion;
 import com.example.springdata.repos.CategoriaRepository;
+import com.example.springdata.repos.ProductoDescripcionRepository;
 import com.example.springdata.repos.ProductoRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class MainDeMentira {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final ProductoDescripcionRepository productoDescripcionRepository;
 
 
     @PostConstruct
@@ -23,11 +26,25 @@ public class MainDeMentira {
 
         Producto p = Producto.builder()
                 .nombreProducto("Un producto")
-                .descripcion("Se trata de un producto de nuestro catálogo")
+                //.descripcion("Se trata de un producto de nuestro catálogo")
                 .precioVenta(123.45)
                 .build();
 
         productoRepository.save(p);
+
+
+        ProductoDescripcion descripcion = ProductoDescripcion
+                .builder()
+                .descripcion("Se trata de un producto de nuestro catálogo")
+                .marca("marca")
+                .modelo("modelo")
+                .url("http://")
+                .build();
+
+        p.setProductoDescripcion(descripcion);
+
+        productoDescripcionRepository.save(descripcion);
+
 
         productoRepository.findById(1L).ifPresentOrElse(
                 System.out::println,
@@ -43,7 +60,7 @@ public class MainDeMentira {
 
         Producto coche = Producto.builder()
                 .nombreProducto("Audi RS6")
-                .descripcion("Un coche de más de 500 CV")
+                //.descripcion("Un coche de más de 500 CV")
                 .precioVenta(200000)
                 .build();
 
