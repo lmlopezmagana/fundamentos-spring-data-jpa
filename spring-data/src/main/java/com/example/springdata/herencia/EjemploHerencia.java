@@ -1,5 +1,6 @@
 package com.example.springdata.herencia;
 
+import com.example.springdata.herencia.model.Administrador;
 import com.example.springdata.herencia.model.Usuario;
 import com.example.springdata.herencia.repos.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
@@ -22,6 +23,16 @@ public class EjemploHerencia {
                 .build();
 
         usuarioRepository.save(usuario);
+
+        Administrador administrador = Administrador.builder()
+                .username("admin")
+                .password("admin")
+                .email("admin@openwebinars.net")
+                .superadmin(true)
+                .build();
+
+        usuarioRepository.save(administrador);
+
 
 
     }
