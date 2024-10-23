@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class EjemploConsultas {
+public class EjemploConsultasDerivadas {
 
     private final ProductoRepository productoRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         System.out.println("=== 10 productos más caros ===");
