@@ -19,7 +19,7 @@ public class EjemploHerencia {
     private final EmpleadoRepository empleadoRepository;
     private final ViviendaRepository viviendaRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         /*Usuario usuario = Usuario.builder()

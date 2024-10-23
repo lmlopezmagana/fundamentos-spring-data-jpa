@@ -6,7 +6,7 @@ import com.example.springdata.asociaciones.model.ProductoDescripcion;
 import com.example.springdata.asociaciones.model.Tag;
 import com.example.springdata.asociaciones.repos.CategoriaRepository;
 import com.example.springdata.asociaciones.repos.ProductoDescripcionRepository;
-import com.example.springdata.asociaciones.repos.ProductoRepository;
+import com.example.springdata.consultas.ProductoRepository;
 import com.example.springdata.asociaciones.repos.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -4,8 +4,7 @@ import com.example.springdata.asociaciones.model.LineaPedido;
 import com.example.springdata.asociaciones.model.Pedido;
 import com.example.springdata.asociaciones.model.Producto;
 import com.example.springdata.asociaciones.repos.PedidoRepository;
-import com.example.springdata.asociaciones.repos.ProductoRepository;
-import jakarta.annotation.PostConstruct;
+import com.example.springdata.consultas.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
