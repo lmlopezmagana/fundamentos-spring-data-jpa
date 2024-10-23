@@ -1,5 +1,6 @@
 package com.example.springdata.consultas;
 
+import com.example.springdata.asociaciones.model.Producto;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,31 @@ public class EjemploConsultasJPQL {
         System.out.println("=== Obtener la información más básica de los productos ===");
         productoRepository.informacionBasica()
                 .forEach(dto -> System.out.println("%d: %s".formatted(dto.id(), dto.nombre())));
+
+        System.out.println("=== Productos de la categoría 1 ===");
+        productoRepository.productosDeCategoria1()
+                .forEach(p -> System.out.println("%s (%.2f€) (Categoría %s)"
+                        .formatted(p.getNombreProducto(),
+                                p.getPrecioVenta(),
+                                p.getCategoria().getNombre()
+                                )));
+
+
+        Producto producto = Producto.builder()
+                .nombreProducto("Producto sin categoria")
+                .precioVenta(12.34)
+                .build();
+
+        productoRepository.save(producto);
+
+        System.out.println("=== Productos con su categoría ===");
+        productoRepository.productosConCategoriaSiTienen()
+                .forEach(p -> System.out.println("%s (%.2f€) (Categoría %s)"
+                        .formatted(p.getNombreProducto(),
+                                p.getPrecioVenta(),
+                                p.getCategoria() != null ? p.getCategoria().getNombre() : "Sin categoría"
+                        )));
+
 
 
     }

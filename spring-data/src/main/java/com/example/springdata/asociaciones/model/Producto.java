@@ -39,12 +39,12 @@ public class Producto {
     @Column(name = "precio")
     private double precioVenta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(foreignKey =
         @ForeignKey(name = "fk_producto_categoria"))
     private Categoria categoria;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "producto_tag",
         joinColumns = @JoinColumn(name="producto_id"),
             inverseJoinColumns = @JoinColumn(name="tag_id")

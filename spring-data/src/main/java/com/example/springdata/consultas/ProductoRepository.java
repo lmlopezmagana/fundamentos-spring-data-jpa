@@ -29,6 +29,19 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<GetProductoDto> informacionBasica();
 
 
+    @Query("""
+            select p 
+            from Producto p join fetch p.categoria c
+            where c.id = 1           
+            """)
+    List<Producto> productosDeCategoria1();
+
+    @Query("""
+            select p
+            from Producto p left join fetch p.categoria
+            """)
+    List<Producto> productosConCategoriaSiTienen();
+
 
     List<Producto> findTop10ByOrderByPrecioVentaDesc();
 
