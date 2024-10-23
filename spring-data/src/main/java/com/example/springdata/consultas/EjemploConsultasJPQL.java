@@ -1,9 +1,13 @@
 package com.example.springdata.consultas;
 
 import com.example.springdata.asociaciones.model.Producto;
+import com.example.springdata.asociaciones.model.Tag;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -48,6 +52,25 @@ public class EjemploConsultasJPQL {
                                 p.getPrecioVenta(),
                                 p.getCategoria() != null ? p.getCategoria().getNombre() : "Sin categoría"
                         )));
+
+        System.out.println("=== Obtener el precio de venta más caro de la categoría Electrónica ===");
+        System.out.println(productoRepository.precioMasCaroDeCategoria("Electrónica"));
+
+        System.out.println("=== Obtener los productos con algunos tags ===");
+        productoRepository.productosConTags(List.of("IA","Divertido"))
+                .forEach(p -> System.out.println("%s (%.2f€) (%s)".formatted(
+                        p.getNombreProducto(),
+                        p.getPrecioVenta(),
+                        p.getTags().stream().map(Tag::getNombre).collect(Collectors.joining(","))
+                )));
+
+        System.out.println("=== Productos que contienen Inalámbrico con precio venta [20,50]€ ===");
+        productoRepository.productosPorNombreYRangoPrecio("inalámbrico", 20, 50)
+                .forEach(p -> System.out.println("%s (%.2f€) (Categoría: %s)".formatted(
+                        p.getNombreProducto(),
+                        p.getPrecioVenta(),
+                        p.getCategoria() != null ? p.getCategoria().getNombre() : "Sin categoría"
+                )));
 
 
 
