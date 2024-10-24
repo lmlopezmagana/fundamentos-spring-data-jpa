@@ -15,7 +15,7 @@ public class EjemploConsultasJPQL {
 
     private final ProductoRepository productoRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         System.out.println("=== Obtener todos los productos ===");

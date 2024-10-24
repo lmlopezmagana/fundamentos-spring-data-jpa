@@ -32,7 +32,8 @@ public class Producto {
 
     @OneToOne(
             mappedBy = "producto",
-            fetch = FetchType.EAGER
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.REMOVE
     )
     private ProductoDescripcion descripcion;
 
