@@ -4,6 +4,9 @@ import com.example.springdata.asociaciones.model.Categoria;
 import com.example.springdata.asociaciones.model.Producto;
 import com.example.springdata.asociaciones.model.Tag;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -146,6 +149,19 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
             """)
     void ofertaProductosCategoria(Categoria categoria, double descuento);
 
+    // Paginación
+
+    Page<Producto> findByNombreProductoContainsIgnoreCase(String nombre, Pageable pageable);
+
+    @Query("""
+            select p
+            from Producto p left join fetch p.tags t
+            where t.nombre IN :tags
+            """)
+    Page<Producto> productosConTags(@Param("tags") List<String> tagsName, Pageable pageable);
+
+    // Limit
+    List<Producto> findByNombreProductoContainsIgnoreCase(String nombre, Limit limit);
 
 
 }

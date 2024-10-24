@@ -13,7 +13,7 @@ public class EjemploConsultasDML {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void run() {
 
         //productoRepository.deleteByPrecioVentaGreaterThan(1000);
