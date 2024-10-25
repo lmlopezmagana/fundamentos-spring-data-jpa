@@ -1,10 +1,9 @@
 package com.openwebinars.data.todoapp.rest.controller;
 
+import com.openwebinars.data.todoapp.rest.dto.EditBasicTaskRequest;
 import com.openwebinars.data.todoapp.rest.dto.TaskRequest;
 import com.openwebinars.data.todoapp.rest.dto.TaskResponse;
-import com.openwebinars.data.todoapp.rest.model.BasicTask;
-import com.openwebinars.data.todoapp.rest.model.Task;
-import com.openwebinars.data.todoapp.rest.model.User;
+import com.openwebinars.data.todoapp.rest.model.*;
 import com.openwebinars.data.todoapp.rest.repos.TaskRepository;
 import com.openwebinars.data.todoapp.rest.repos.TaskTagRepository;
 import com.openwebinars.data.todoapp.rest.repos.UserRepository;
@@ -64,6 +63,68 @@ public class TaskController {
         return result.map(TaskResponse::of);
 
     }
+
+    @PutMapping("/basic/{id}")
+    public ResponseEntity<TaskResponse> editBasicTask(@RequestBody EditBasicTaskRequest editBasicTaskRequest, @PathVariable Long id) {
+        if (!taskRepository.existsByIdAndTaskType(BasicTask.class, id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with ID %d not found".formatted(id));
+        }
+        return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                .map(BasicTask.class::cast)
+                .map(task -> {
+                    task.setTitle(editBasicTaskRequest.title());
+                    task.setDescription(editBasicTaskRequest.description());
+                    return taskRepository.save(task);
+                })
+                .map(TaskResponse::of));
+
+
+    }
+
+    @PutMapping("/checklist/{id}/add/{item}")
+    public ResponseEntity<TaskResponse> addItemToChecklist(@PathVariable String item, @PathVariable Long id) {
+        if (!taskRepository.existsByIdAndTaskType(CheckListTask.class, id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with ID %d not found".formatted(id));
+        }
+        return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                .map(CheckListTask.class::cast)
+                .map(task -> {
+                    task.addItem(CheckListItem.builder().text(item).build());
+                    return taskRepository.save(task);
+                })
+                .map(TaskResponse::of)
+        );
+    }
+
+    @DeleteMapping("/checklist/{id}/del/{item_id}")
+    public ResponseEntity<TaskResponse> deleteItemFromChecklist(@PathVariable("item_id") Long itemId, @PathVariable Long id) {
+        if (!taskRepository.existsByIdAndTaskType(CheckListTask.class, id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with ID %d not found".formatted(id));
+        }
+        return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                .map(CheckListTask.class::cast)
+                .map(task -> {
+                    task.removeItemById(itemId);
+                    return taskRepository.save(task);
+                })
+                .map(TaskResponse::of)
+        );
+    }
+
+    @PutMapping("/checklist/{id}/toggle/{item_id}")
+    public ResponseEntity<TaskResponse> toggleItemInCheckList(@PathVariable("item_id") Long itemId, @PathVariable Long id) {
+        if (!taskRepository.existsByIdAndTaskType(CheckListTask.class, id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with ID %d not found".formatted(id));
+        }
+        taskRepository.toggleCheckListItem(id, itemId);
+        return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                .map(TaskResponse::of)
+        );
+
+
+    }
+
+
 
 
 
