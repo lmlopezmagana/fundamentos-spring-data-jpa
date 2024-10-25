@@ -51,6 +51,32 @@ public class TaskController {
 
     }
 
+    @PostMapping("/new/checklist")
+    public ResponseEntity<TaskResponse> newCheckListTask(@RequestBody TaskRequest taskRequest) {
+
+        Optional<User> owner = userRepository.findByUsername(taskRequest.username());
+
+        CheckListTask task = CheckListTask.builder()
+                .owner(owner.orElse(null))
+                .title(taskRequest.title() != null ? taskRequest.title() : "Sin título")
+                .build();
+
+        taskRequest.items().stream()
+                .map(text -> CheckListItem.builder().text(text).build())
+                .forEach(task::addItem);
+
+        task = taskRepository.save(task);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/task/{id}")
+                .build(task.getId());
+
+
+        return ResponseEntity.created(uri).body(TaskResponse.of(task));
+
+    }
+
+
 
     @GetMapping("/")
     public Page<TaskResponse> getAll(@PageableDefault(page=0, size=5, sort = "createdAt") Pageable pageable) {
@@ -63,6 +89,15 @@ public class TaskController {
         return result.map(TaskResponse::of);
 
     }
+
+    @GetMapping("/{id}")
+    public TaskResponse getById(@PathVariable Long id) {
+        return taskRepository.findByIdWithItemsAndTags(id)
+                .map(TaskResponse::of)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task with ID %d not found".formatted(id)));
+
+    }
+
 
     @PutMapping("/basic/{id}")
     public ResponseEntity<TaskResponse> editBasicTask(@RequestBody EditBasicTaskRequest editBasicTaskRequest, @PathVariable Long id) {
@@ -124,8 +159,44 @@ public class TaskController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+        taskRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping("/{id}/tag/add/{tag}")
+    public ResponseEntity<TaskResponse> addTag(@PathVariable Long id, @PathVariable String tag) {
+        TaskTag taskTag = taskTagRepository.findByName(tag)
+                .orElseGet(() -> taskTagRepository.save(TaskTag.builder().name(tag).build()));
 
+        return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                .map(task -> {
+                    task.getTags().add(taskTag);
+                    return taskRepository.save(task);
+                })
+                .map(TaskResponse::of)
+        );
+
+    }
+
+    @DeleteMapping("/{id}/tag/del/{tag}")
+    public ResponseEntity<TaskResponse> deleteTag(@PathVariable Long id, @PathVariable String tag) {
+        Optional<TaskTag> taskTag = taskTagRepository.findByName(tag);
+
+        if (taskTag.isPresent()) {
+            return ResponseEntity.of(taskRepository.findByIdWithItemsAndTags(id)
+                    .map(task -> {
+                        task.getTags().removeIf(tagItem -> tagItem.getName().equalsIgnoreCase(tag));
+                        return taskRepository.save(task);
+                    })
+                    .map(TaskResponse::of)
+            );
+        }
+
+        return ResponseEntity.notFound().build();
+
+    }
 
 
 
