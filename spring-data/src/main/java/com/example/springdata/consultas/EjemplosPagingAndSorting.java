@@ -4,10 +4,7 @@ import com.example.springdata.asociaciones.model.Producto;
 import com.example.springdata.asociaciones.model.Tag;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Limit;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -68,6 +65,43 @@ public class EjemplosPagingAndSorting {
         System.out.println("=== 5 primeros resultados de productos que contienen n ===");
         productoRepository.findByNombreProductoContainsIgnoreCase("n", Limit.of(5))
                 .forEach(p -> System.out.println("%s (%.2f€)".formatted(p.getNombreProducto(), p.getPrecioVenta())));
+
+
+        // Sort
+        System.out.println("=== Productos ordenados por nombre descendentemente ===");
+        productoRepository.findAll(Sort.by("nombreProducto").descending())
+                .forEach(p -> System.out.println("%s (%.2f€)".formatted(p.getNombreProducto(), p.getPrecioVenta())));
+
+        // Sort y Limit
+        System.out.println("=== 15 primeros productos ordenados por categoría ascendentemente y precio descendentemente ===");
+        productoRepository.productosConCategoriaSiTienen(
+                                Sort.by("categoria.nombre").ascending()
+                                        .and(Sort.by("precioVenta").descending()),
+                                Limit.of(15))
+                .forEach(p -> System.out.println("%s (%.2f€) (Categoría %s)"
+                        .formatted(p.getNombreProducto(),
+                                p.getPrecioVenta(),
+                                p.getCategoria() != null ? p.getCategoria().getNombre() : "Sin categoría"
+                        )));
+
+
+        // Pageable y Sort
+        // El objeto de tipo Sort se pasa como 3º argumento de PageRequest.of
+        System.out.println("=== 1ª página de productos ordenados por categoría ascendentemente y precio descendentemente ===");
+        productoRepository.productosConCategoriaSiTienen(
+                PageRequest.of(0, 15,
+                    Sort.by("categoria.nombre").ascending()
+                            .and(Sort.by("precioVenta").descending())))
+        .getContent()
+        .forEach(p -> System.out.println("%s (%.2f€) (Categoría %s)"
+                        .formatted(p.getNombreProducto(),
+                                p.getPrecioVenta(),
+                                p.getCategoria() != null ? p.getCategoria().getNombre() : "Sin categoría"
+                        )));
+
+
+
+
 
     }
 
